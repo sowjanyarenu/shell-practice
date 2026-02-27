@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 USERID=$(id -u)
 
 if [ $USERID -ne 0 ]; then
@@ -7,30 +7,21 @@ if [ $USERID -ne 0 ]; then
     exit 1
 fi
 
-echo "Installing Nginx"
-dnf install nginx -y
+VALIDATE(){
+    if [ $1 -ne 0 ]; then
+        echo "$2 ... FAILURE"
+        exit 1
+    else 
+        echo "$2 ... SUCCESS"
+    fi
+}
 
-if [ $? -ne 0 ]; then
-    echo "Installing Nginx .... FALIURE"
-    exit 1
-else
-    echo "Installing Nginx .... SUCCESS"
-fi
+dnf install nginx -y
+VALIDATE $? "Installing Nginx"
 
 dnf install mysql -y
-
-if [ $? -ne 0 ]; then
-    echo "Installing Mysql .... FALIURE"
-    exit 1
-else
-    echo "Installing Mysql .... SUCCESS"
-fi
+VALIDATE $? "Installing Mysql"
 
 dnf install nodejs -y
+VALIDATE $? "Installing Nodejs"
 
-if [ $? -ne 0 ]; then
-    echo "Installing nodejs .... FALIURE"
-    exit 1
-else
-    echo "Installing nodejs .... SUCCESS"
-fi
